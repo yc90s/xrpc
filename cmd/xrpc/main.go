@@ -121,17 +121,21 @@ func main() {
 	var outDir string
 	flag.BoolVar(&version, "version", false, "print version")
 	flag.StringVar(&outDir, "out", ".", "output directory")
+	flag.Parse()
 
 	if version {
-		fmt.Println("xrpc v0.1.0")
+		fmt.Println("xrpc v1.0.3")
 		return
 	}
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "  -out string\n    output directory (default \".\")\n")
-		fmt.Fprintf(os.Stderr, "  file_pattern\n    service file pattern\n")
-		fmt.Fprintf(os.Stderr, "Example: %s -out out_dir file_pattern\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage of %s [flags] IDL:\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Example:\n")
+		fmt.Fprintf(os.Stderr, "  %s -out out_dir {{file_pattern}}\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Flags:\n")
+		fmt.Fprintf(os.Stderr, "  -version\n    Show the version of xrpc\n")
+		fmt.Fprintf(os.Stderr, "  -out string\n    Specify output directory (default \".\")\n")
+		fmt.Fprintf(os.Stderr, "  file_pattern\n    Specify service file pattern\n")
 	}
 
 	flag.Parse()
