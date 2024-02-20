@@ -111,7 +111,7 @@ func main() {
 - `HelloRPCService` 实现了我们定义的RPC接口, 它有一个`Hello`方法
 - `newHelloService` 函数用来创建并注册RPC服务, 采用`nats`消息队列, 指定订阅`hello_server`主题
 - `newHelloRPCServiceClient` 函数创建RPC客户端
-- 在`main`函数里面, 首先通过`Start`启动RPC服务, 然后RPC调用`Hello`方法, 最后输出结果`hello:yc90s`
+- `main`函数里面, 首先通过`Start`启动RPC服务, 然后RPC调用`Hello`方法, 最后输出结果`hello:yc90s`
 
 更多的例子可以参考[examples](https://github.com/yc90s/xrpc/tree/master/examples)
 
