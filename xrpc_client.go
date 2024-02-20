@@ -162,7 +162,7 @@ func (c *RPCClient) Callback(data []byte, mqerr error) {
 	if mqerr != nil {
 		glog.Error(mqerr)
 		// some error happend, should close the client
-		c.close()
+		c.Close()
 		return
 	}
 
@@ -179,7 +179,7 @@ func (c *RPCClient) Callback(data []byte, mqerr error) {
 	}
 }
 
-func (c *RPCClient) close() {
+func (c *RPCClient) Close() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.isValid {

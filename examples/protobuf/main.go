@@ -16,12 +16,7 @@ type HelloRPCService struct {
 	*xrpc.RPCServer
 }
 
-func newHelloService() *HelloRPCService {
-	nc, err := nats.Connect("nats://127.0.0.1:4222", nats.MaxReconnects(1000))
-	if err != nil {
-		glog.Error("nats error ", err)
-	}
-
+func newHelloService(nc *nats.Conn) *HelloRPCService {
 	s := &HelloRPCService{
 		RPCServer: xrpc.NewRPCServer(
 			xrpc.SetMQ(natsmq.NewMQueen(nc)),
@@ -43,12 +38,7 @@ func (s *HelloRPCService) Add(arg1 *pb.String, arg2 *pb.String) (*pb.String, err
 	return reply, nil
 }
 
-func newHelloRPCServiceClient() *HelloServiceClient {
-	nc, err := nats.Connect("nats://127.0.0.1:4222", nats.MaxReconnects(1000))
-	if err != nil {
-		glog.Error("nats error ", err)
-	}
-
+func newHelloRPCServiceClient(nc *nats.Conn) *HelloServiceClient {
 	return NewHelloServiceClient(xrpc.NewRPCClient(
 		xrpc.SetMQ(natsmq.NewMQueen(nc)),
 		xrpc.SetSubj("hello_client"),
@@ -59,13 +49,22 @@ func newHelloRPCServiceClient() *HelloServiceClient {
 func main() {
 	flag.Set("logtostderr", "true")
 	flag.Parse()
-	s := newHelloService()
-	err := s.Start()
+
+	nc, err := nats.Connect("nats://127.0.0.1:4222", nats.MaxReconnects(1000))
+	if err != nil {
+		glog.Error("nats error ", err)
+	}
+	defer nc.Close()
+
+	s := newHelloService(nc)
+	err = s.Start()
 	if err != nil {
 		glog.Error(err)
 	}
+	defer s.Stop()
 
-	c := newHelloRPCServiceClient()
+	c := newHelloRPCServiceClient(nc)
+	defer c.Close()
 
 	arg1 := &pb.String{Value: "yc90s"}
 	reply1, err1 := c.Hello("hello_server", arg1)
