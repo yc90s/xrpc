@@ -1,5 +1,5 @@
 # xrpc 说明
-English(README.md) | 中文
+[English](README_en.md) | 中文
 
 xrpc是用来自动生成rpc服务接口信息代码的工具
 
@@ -9,7 +9,7 @@ xrpc是用来自动生成rpc服务接口信息代码的工具
 go install github.com/yc90s/xrpc/cmd/xrpc@latest
 ```
 
-2. 编写接口文件hello.service, 定义一个服务`HelloService`, 它提供两个接口
+2. 编写一个接口文件`hello.service`如下, 它定义了一个服务`HelloService`, 包含两个接口
 ```
 package main
 
