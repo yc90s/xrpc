@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package xrpcpb;
+option go_package = ".;xrpcpb";
+
+message Request {
+    string Cid = 1;             // request unique id
+    string ReplyTo = 2;         // empty or a queue name
+    string Method = 3;
+    repeated bytes Params = 4;
+}
+
+message Response {
+    string Cid = 1;
+    string Error = 2;
+    bytes Result = 3;
+}
+
+// protoc --go_out=. *.proto
