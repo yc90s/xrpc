@@ -1,12 +1,15 @@
 # XRPC 
 [English](README_en.md) | 中文
+
 [![License](https://img.shields.io/badge/license-apache-blue)](https://opensource.org/licenses/Apache-2.0) 
+
 
 XRPC是一个基于消息队列的简洁, 轻量的RPC框架
 
 ## Overview
 XRPC设计的原则是为了实现一套基于消息队列的、易于拓展和易于使用的轻量级RPC框架. 
-它的核心非常精简, 而且提供了消息队列的接口, 序列化的接口, 使其可以非常方便地定制化拓展.
+
+它的核心非常精简, 并且提供了消息队列的接口、序列化的接口, 使其可以非常方便地定制化拓展.
 
 ## Features
 - 使用消息队列作为RPC的通道
@@ -41,7 +44,7 @@ xrpc hello.service
 ```
 
 ### 实现代码
-接下来实现上面定义的`HelloService`服务接口, 并rpc调用`Hello`方法
+接下来实现上面定义的`HelloService`服务接口, 并通过RPC调用`Hello`方法
 ```golang
 package main
 
@@ -110,7 +113,7 @@ func main() {
 - `newHelloRPCServiceClient` 函数创建RPC客户端
 - 在`main`函数里面, 首先通过`Start`启动RPC服务, 然后RPC调用`Hello`方法, 最后输出结果`hello:yc90s`
 
-更多的例子可以参考[examples]
+更多的例子可以参考[examples](https://github.com/yc90s/xrpc/tree/master/examples)
 
 ## License
 XRPC is Apache 2.0 licensed.
