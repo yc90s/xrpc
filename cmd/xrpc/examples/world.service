@@ -1,0 +1,8 @@
+package main 
+
+import "github.com/yc90s/xrpc/examples/protobuf/pb"
+
+service HelloPbService {
+    Hello(*pb.String) (*pb.String, error)
+    Add(*pb.String, *pb.String) (*pb.String, error)
+}
