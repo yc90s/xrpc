@@ -1,11 +1,13 @@
 # XRPC 
 English | [中文](README.md)
+
 [![License](https://img.shields.io/badge/license-apache-blue)](https://opensource.org/licenses/Apache-2.0) 
 
 XRPC is a concise and lightweight RPC framework based on message queues
 
 ## Overview
 The principle of XRPC design is to implement a lightweight RPC framework based on message queues, which is easy to expand and use. 
+
 Its core is very streamlined, and it provides an interface for message queues and serialization, making it very convenient to customize and expand
 
 ## Features
@@ -18,7 +20,7 @@ Its core is very streamlined, and it provides an interface for message queues an
 
 ## Getting Started
 ### Install NATS
-Install and start NATS, refer to[Install Nats](https://docs.nats.io/running-a-nats-service/introduction/installation)
+Install and start NATS, refer to [Install Nats](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
 ### Install code generation tool for xrpc
 ```
@@ -42,7 +44,7 @@ xrpc hello.service
 ```
 
 ### Code
-Next, implement the `HelloService` interface defined above and RPC call the `Hello` method.
+Next, implement the `HelloService` interface defined above and call the `Hello` method through RPC.
 ```golang
 package main
 
@@ -111,7 +113,7 @@ func main() {
 - `newHelloRPCServiceClient` function creates an RPC client
 - In the `main` function, first start the RPC service through `Start`, then RPC calls the `Hello` method, and finally outputs the result `hello:yc90s`
 
-See the [examples] for more detailed information on usage.
+See the [examples](https://github.com/yc90s/xrpc/tree/master/examples) for more detailed information on usage.
 
 ## License
 XRPC is Apache 2.0 licensed.
