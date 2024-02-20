@@ -1,0 +1,9 @@
+package main 
+
+service HelloService {
+    Hello(string) (string, error)
+    HelloError(*string, string) (*string, error)
+    Add(int, *int) (int, error)
+    Ping()
+    Bye(string)
+}
