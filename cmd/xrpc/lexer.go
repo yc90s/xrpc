@@ -61,8 +61,9 @@ func (l *Lexer) get_next_token() *Token {
 		}
 
 		if val, ok := SINGLE_CHAR_TOKENS[string(l.current_char)]; ok {
+			token := NewToken(val, val, l.lineno, l.column)
 			l.advance()
-			return NewToken(val, string(l.current_char), l.lineno, l.column)
+			return token
 		}
 
 		return l.id()
@@ -73,6 +74,9 @@ func (l *Lexer) get_next_token() *Token {
 
 func (l *Lexer) id() *Token {
 	var value string
+
+	lineno := l.lineno
+	column := l.column
 
 	if l.current_char == '*' {
 		value += string(l.current_char)
@@ -85,27 +89,31 @@ func (l *Lexer) id() *Token {
 	}
 
 	if val, ok := RESERVE_KEYWORDS[value]; ok {
-		return NewToken(val, value, l.lineno, l.column)
+		return NewToken(val, value, lineno, column)
 	}
 
 	if len(value) == 0 {
-		return NewToken(EOF, "", l.lineno, l.column)
+		return NewToken(EOF, "", lineno, column)
 	}
 
-	return NewToken(ID, value, l.lineno, l.column)
+	return NewToken(ID, value, lineno, column)
 }
 
 func (l *Lexer) path() *Token {
 	var value string
+
+	lineno := l.lineno
+	column := l.column
 
 	l.advance()
 	for l.current_char != '"' {
 		value += string(l.current_char)
 		l.advance()
 	}
+
 	l.advance()
 
-	return NewToken(PATH, value, l.lineno, l.column)
+	return NewToken(PATH, value, lineno, column)
 }
 
 func (l *Lexer) skip_whitespace() {
