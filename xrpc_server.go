@@ -3,6 +3,7 @@ package xrpc
 import (
 	"errors"
 	"reflect"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -150,6 +151,12 @@ func (s *RPCServer) _runFunc(start time.Time, methodInfo *MethodInfo, request *x
 	defer func() {
 		s.wg.Done()
 		s.executingNum.Add(-1)
+
+		if r := recover(); r != nil {
+			buf := make([]byte, 4096)
+			n := runtime.Stack(buf, false)
+			glog.Error("runFunc panic: ", r, string(buf[:n]))
+		}
 	}()
 
 	if len(request.Params) != len(methodInfo.InType) {
