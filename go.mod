@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/golang/glog v1.2.0
 	github.com/golang/protobuf v1.5.3
+	github.com/google/uuid v1.6.0
 	github.com/nats-io/nats.go v1.32.0
 	google.golang.org/protobuf v1.32.0
 )

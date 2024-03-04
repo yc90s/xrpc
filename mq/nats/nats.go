@@ -28,10 +28,6 @@ func (mq *MQueen) Init() error {
 	return nil
 }
 
-func (mq *MQueen) GenerateSubj() string {
-	return nats.NewInbox()
-}
-
 func (mq *MQueen) Publish(subj string, data []byte) error {
 	return mq.conn.Publish(subj, data)
 }

@@ -8,8 +8,6 @@ type MQCallback interface {
 
 // MQServer is the interface that wraps the basic method of a message queue server.
 type MQueen interface {
-	// GenerateSubj generates a unique subject name.
-	GenerateSubj() string
 	// Publish publishes a message to the subject.
 	Publish(string, []byte) error
 	// Subscribe subscribes a subject.

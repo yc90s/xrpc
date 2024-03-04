@@ -1,8 +1,6 @@
 package xrpc
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"errors"
 	"sync"
 	"time"
@@ -11,6 +9,7 @@ import (
 	xrpcpb "github.com/yc90s/xrpc/pb"
 
 	"github.com/golang/glog"
+	"github.com/google/uuid"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -37,26 +36,12 @@ func NewRPCClient(opts ...Option) *RPCClient {
 		rpc_client.opts.codec = gobcodec.NewCodec()
 	}
 
-	if len(rpc_client.opts.subj) == 0 {
-		rpc_client.opts.subj = rpc_client.opts.mq.GenerateSubj()
-	}
-
 	rpc_client.isValid = true
 	err := rpc_client.opts.mq.Subscribe(rpc_client.opts.subj, rpc_client)
 	if err != nil {
 		rpc_client.isValid = false
 	}
 	return rpc_client
-}
-
-func generateCID() (string, error) {
-	b := make([]byte, 16)
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-	cid := hex.EncodeToString(b)
-	return cid, nil
 }
 
 // Call is a method to call a rpc method with reply
@@ -117,10 +102,11 @@ func (c *RPCClient) _call(subj string, methodName string, reply any, args ...any
 		argsData = append(argsData, data)
 	}
 
-	cid, err := generateCID()
+	randCid, err := uuid.NewRandom()
 	if err != nil {
 		return err
 	}
+	cid := randCid.String()
 	request := &xrpcpb.Request{
 		Cid:     cid,
 		ReplyTo: c.opts.subj,

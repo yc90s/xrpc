@@ -54,10 +54,6 @@ func NewRPCServer(opts ...Option) *RPCServer {
 		rpc_server.opts.codec = gobcodec.NewCodec()
 	}
 
-	if len(rpc_server.opts.subj) == 0 {
-		rpc_server.opts.subj = rpc_server.opts.mq.GenerateSubj()
-	}
-
 	return rpc_server
 }
 
