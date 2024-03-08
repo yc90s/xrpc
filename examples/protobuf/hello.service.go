@@ -11,25 +11,29 @@ type IHelloService interface {
 }
 
 func RegisterHelloServiceServer(rpc *xrpc.RPCServer, s IHelloService) {
-    rpc.Register("Hello", s.Hello)
-    rpc.Register("Add", s.Add)
+	rpc.Register("Hello", s.Hello)
+	rpc.Register("Add", s.Add)
 }
 
 type HelloServiceClient struct {
-    *xrpc.RPCClient
+    c xrpc.IRPCClient
 }
 
-func NewHelloServiceClient(c *xrpc.RPCClient) *HelloServiceClient {
-    return &HelloServiceClient{c}
+func NewHelloServiceClient(c xrpc.IRPCClient) *HelloServiceClient {
+    return &HelloServiceClient{c: c}
+}
+
+func (c *HelloServiceClient) Close() {
+	c.c.Close()
 }
 
 func (c *HelloServiceClient) Hello(subj string, arg0 *pb.String) (*pb.String, error) {
     var reply pb.String
-    err := c.Call(subj, "Hello", &reply, arg0)
+    err := c.c.Call(subj, "Hello", &reply, arg0)
     return &reply, err
 }
 func (c *HelloServiceClient) Add(subj string, arg0 *pb.String, arg1 *pb.String) (*pb.String, error) {
     var reply pb.String
-    err := c.Call(subj, "Add", &reply, arg0, arg1)
+    err := c.c.Call(subj, "Add", &reply, arg0, arg1)
     return &reply, err
 }

@@ -13,41 +13,45 @@ type IHelloService interface {
 }
 
 func RegisterHelloServiceServer(rpc *xrpc.RPCServer, s IHelloService) {
-    rpc.Register("Hello", s.Hello)
-    rpc.Register("HelloError", s.HelloError)
-    rpc.Register("Add", s.Add)
-    rpc.Register("Ping", s.Ping)
-    rpc.Register("Bye", s.Bye)
+	rpc.Register("Hello", s.Hello)
+	rpc.Register("HelloError", s.HelloError)
+	rpc.RegisterGO("Add", s.Add)
+	rpc.Register("Ping", s.Ping)
+	rpc.Register("Bye", s.Bye)
 }
 
 type HelloServiceClient struct {
-    *xrpc.RPCClient
+    c xrpc.IRPCClient
 }
 
-func NewHelloServiceClient(c *xrpc.RPCClient) *HelloServiceClient {
-    return &HelloServiceClient{c}
+func NewHelloServiceClient(c xrpc.IRPCClient) *HelloServiceClient {
+    return &HelloServiceClient{c: c}
+}
+
+func (c *HelloServiceClient) Close() {
+	c.c.Close()
 }
 
 func (c *HelloServiceClient) Hello(subj string, arg0 string) (string, error) {
     var reply string
-    err := c.Call(subj, "Hello", &reply, arg0)
+    err := c.c.Call(subj, "Hello", &reply, arg0)
     return reply, err
 }
 func (c *HelloServiceClient) HelloError(subj string, arg0 *string, arg1 string) (*string, error) {
     var reply string
-    err := c.Call(subj, "HelloError", &reply, arg0, arg1)
+    err := c.c.Call(subj, "HelloError", &reply, arg0, arg1)
     return &reply, err
 }
 func (c *HelloServiceClient) Add(subj string, arg0 int, arg1 *int) (int, error) {
     var reply int
-    err := c.Call(subj, "Add", &reply, arg0, arg1)
+    err := c.c.Call(subj, "Add", &reply, arg0, arg1)
     return reply, err
 }
 func (c *HelloServiceClient) Ping(subj string) error {
-    err := c.Cast(subj, "Ping")
+    err := c.c.Cast(subj, "Ping")
     return err
 }
 func (c *HelloServiceClient) Bye(subj string, arg0 string) error {
-    err := c.Cast(subj, "Bye", arg0)
+    err := c.c.Cast(subj, "Bye", arg0)
     return err
 }

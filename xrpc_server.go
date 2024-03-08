@@ -57,6 +57,10 @@ func NewRPCServer(opts ...Option) *RPCServer {
 	return rpc_server
 }
 
+func (s *RPCServer) GetSubj() string {
+	return s.opts.subj
+}
+
 func (s *RPCServer) _register(name string, f interface{}, goroutine bool) error {
 	if _, ok := s.methods[name]; ok {
 		return ErrRepeatedRegister

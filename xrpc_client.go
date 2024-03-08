@@ -13,6 +13,13 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// 用于外部封装的接口
+type IRPCClient interface {
+	Call(subj string, methodName string, reply any, args ...any) error
+	Cast(subj string, methodName string, args ...any) error
+	Close()
+}
+
 // RPCClient is a rpc client, it must implement the MQCallback interface
 type RPCClient struct {
 	opts    Options
