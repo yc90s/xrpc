@@ -22,6 +22,7 @@ type MethodAST struct {
 	Name    string
 	Args    []string
 	Returns []string
+	IsGo    bool
 }
 
 func (s *ServiceAST) String() string {
@@ -33,7 +34,7 @@ func (s *ServiceAST) String() string {
 }
 
 func (m *MethodAST) String() string {
-	return fmt.Sprintf("MethodAST(name=%s, args=%v, returns=%v)", m.Name, m.Args, m.Returns)
+	return fmt.Sprintf("MethodAST(name=%s, args=%v, returns=%v, isgo=)", m.Name, m.Args, m.Returns, m.IsGo)
 }
 
 // Grammar rule:
@@ -41,7 +42,7 @@ func (m *MethodAST) String() string {
 // serviceList: service | service serviceList
 // service: SERVICE ID LCURLY serviceMethodList RCURLY
 // serviceMethodList: serviceMethodDecl serviceMethodList | serviceMethodDecl
-// serviceMethodDecl: ID LPAREN formalParametersList RPAREN returnValue
+// serviceMethodDecl: (GO)+ ID LPAREN formalParametersList RPAREN returnValue
 // parametersList: parameter
 //    			 | parameter COMMA parametersList
 //               | empty
@@ -70,11 +71,12 @@ func NewServiceAST(name string, methods []*MethodAST) *ServiceAST {
 	}
 }
 
-func NewMethodAST(name string, args, returns []string) *MethodAST {
+func NewMethodAST(name string, args, returns []string, isGo bool) *MethodAST {
 	return &MethodAST{
 		Name:    name,
 		Args:    args,
 		Returns: returns,
+		IsGo:    isGo,
 	}
 }
 
@@ -201,7 +203,7 @@ func (p *Parser) serviceMethodList() ([]*MethodAST, error) {
 	}
 	methods = append(methods, method)
 
-	for p.currentToken.tp == ID {
+	for p.currentToken.tp == ID || p.currentToken.tp == GO {
 		method, err := p.serviceMethodDecl()
 		if err != nil {
 			return nil, err
@@ -213,6 +215,15 @@ func (p *Parser) serviceMethodList() ([]*MethodAST, error) {
 }
 
 func (p *Parser) serviceMethodDecl() (*MethodAST, error) {
+	isGo := false
+	if p.currentToken.tp == GO {
+		err := p.eat(GO)
+		if err != nil {
+			return nil, err
+		}
+		isGo = true
+	}
+
 	methodName := p.currentToken.value
 	err := p.eat(ID)
 	if err != nil {
@@ -239,7 +250,7 @@ func (p *Parser) serviceMethodDecl() (*MethodAST, error) {
 		return nil, err
 	}
 
-	return NewMethodAST(methodName, args, returns), nil
+	return NewMethodAST(methodName, args, returns, isGo), nil
 }
 
 func (p *Parser) formalParametersList() ([]string, error) {

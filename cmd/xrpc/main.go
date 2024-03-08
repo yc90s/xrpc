@@ -38,16 +38,24 @@ type I{{$m.Name}} interface {
 
 func Register{{$m.Name}}Server(rpc *xrpc.RPCServer, s I{{$m.Name}}) {
 	{{- range $_, $method := $m.Methods }}
-    rpc.Register("{{$method.Name}}", s.{{$method.Name}})
+	{{- if $method.IsGo }}
+	rpc.RegisterGO("{{$method.Name}}", s.{{$method.Name}})
+	{{- else }}
+	rpc.Register("{{$method.Name}}", s.{{$method.Name}})
+	{{- end }}
 	{{- end}}
 }
 
 type {{$m.Name}}Client struct {
-    *xrpc.RPCClient
+    c xrpc.IRPCClient
 }
 
-func New{{$m.Name}}Client(c *xrpc.RPCClient) *{{$m.Name}}Client {
-    return &{{$m.Name}}Client{c}
+func New{{$m.Name}}Client(c xrpc.IRPCClient) *{{$m.Name}}Client {
+    return &{{$m.Name}}Client{c: c}
+}
+
+func (c *{{$m.Name}}Client) Close() {
+	c.c.Close()
 }
 {{range $_, $method := $m.Methods}}
 func (c *{{$m.Name}}Client) {{$method.Name}}(subj string
@@ -64,7 +72,7 @@ func (c *{{$m.Name}}Client) {{$method.Name}}(subj string
 
 	{{- if len $method.Returns }}
     var reply {{decayReply (getReply $method.Returns)}}
-    err := c.Call(subj, "{{$method.Name}}", &reply
+    err := c.c.Call(subj, "{{$method.Name}}", &reply
     {{- range $index, $arg := $method.Args -}}
 		, arg{{$index}}
 	{{- end -}})
@@ -75,7 +83,7 @@ func (c *{{$m.Name}}Client) {{$method.Name}}(subj string
 	{{- end}}
 
 	{{- else}}
-    err := c.Cast(subj, "{{$method.Name}}"
+    err := c.c.Cast(subj, "{{$method.Name}}"
 	{{- range $index, $arg := $method.Args -}}
 		, arg{{$index}}
 	{{- end -}})

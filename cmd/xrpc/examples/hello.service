@@ -1,11 +1,11 @@
 package main
 
 service HelloService {
-    Hello(string) (string, error)
+    go Hello(string) (string, error)
     Add(*string, int) (*string, error)
 }
 
 service WorldService {
     Hi()
-    Sum() (int, error)
+    go Sum() (int, error)
 }

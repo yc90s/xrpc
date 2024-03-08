@@ -12,6 +12,7 @@ const (
 	SERVICE = "service"
 	PACKAGE = "package"
 	IMPORT  = "import"
+	GO      = "go"
 
 	ID   = "ID"
 	PATH = "PATH"
@@ -22,6 +23,7 @@ var RESERVE_KEYWORDS = map[string]string{
 	SERVICE: SERVICE,
 	PACKAGE: PACKAGE,
 	IMPORT:  IMPORT,
+	GO:      GO,
 }
 
 var SINGLE_CHAR_TOKENS = map[string]string{
