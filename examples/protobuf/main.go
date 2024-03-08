@@ -38,12 +38,8 @@ func (s *HelloRPCService) Add(arg1 *pb.String, arg2 *pb.String) (*pb.String, err
 	return reply, nil
 }
 
-func newHelloRPCServiceClient(nc *nats.Conn) *HelloServiceClient {
-	return NewHelloServiceClient(xrpc.NewRPCClient(
-		xrpc.SetMQ(natsmq.NewMQueen(nc)),
-		xrpc.SetSubj("hello_client"),
-		xrpc.SetCodec(protocodec.NewCodec()),
-	))
+func newHelloRPCServiceClient(c xrpc.IRPCClient) *HelloServiceClient {
+	return NewHelloServiceClient(c)
 }
 
 func main() {
@@ -63,8 +59,14 @@ func main() {
 	}
 	defer s.Stop()
 
-	c := newHelloRPCServiceClient(nc)
-	defer c.Close()
+	client := xrpc.NewRPCClient(
+		xrpc.SetMQ(natsmq.NewMQueen(nc)),
+		xrpc.SetSubj("hello_client"),
+		xrpc.SetCodec(protocodec.NewCodec()),
+	)
+	defer client.Close()
+
+	c := newHelloRPCServiceClient(client)
 
 	arg1 := &pb.String{Value: "yc90s"}
 	reply1, err1 := c.Hello("hello_server", arg1)

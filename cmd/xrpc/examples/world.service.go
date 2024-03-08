@@ -23,15 +23,13 @@ func NewHelloPbServiceClient(c xrpc.IRPCClient) *HelloPbServiceClient {
     return &HelloPbServiceClient{c: c}
 }
 
-func (c *HelloPbServiceClient) Close() {
-	c.c.Close()
-}
 
 func (c *HelloPbServiceClient) Hello(subj string, arg0 *pb.String) (*pb.String, error) {
     var reply pb.String
     err := c.c.Call(subj, "Hello", &reply, arg0)
     return &reply, err
 }
+
 func (c *HelloPbServiceClient) Add(subj string, arg0 *pb.String, arg1 *pb.String) (*pb.String, error) {
     var reply pb.String
     err := c.c.Call(subj, "Add", &reply, arg0, arg1)

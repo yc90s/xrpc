@@ -17,7 +17,6 @@ import (
 type IRPCClient interface {
 	Call(subj string, methodName string, reply any, args ...any) error
 	Cast(subj string, methodName string, args ...any) error
-	Close()
 }
 
 // RPCClient is a rpc client, it must implement the MQCallback interface

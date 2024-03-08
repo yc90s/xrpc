@@ -48,11 +48,8 @@ func (s *HelloRPCService) Bye(arg string) {
 	glog.Info("bye:" + arg)
 }
 
-func newHelloRPCServiceClient(nc *nats.Conn) *HelloServiceClient {
-	return NewHelloServiceClient(xrpc.NewRPCClient(
-		xrpc.SetMQ(natsmq.NewMQueen(nc)),
-		xrpc.SetSubj("hello_client"),
-	))
+func newHelloRPCServiceClient(c xrpc.IRPCClient) *HelloServiceClient {
+	return NewHelloServiceClient(c)
 }
 
 func main() {
@@ -72,8 +69,13 @@ func main() {
 	}
 	defer s.Stop()
 
-	c := newHelloRPCServiceClient(nc)
-	defer c.Close()
+	client := xrpc.NewRPCClient(
+		xrpc.SetMQ(natsmq.NewMQueen(nc)),
+		xrpc.SetSubj("hello_client"),
+	)
+	defer client.Close()
+
+	c := newHelloRPCServiceClient(client)
 
 	reply1, err1 := c.Hello("hello_server", "yc90s")
 	if err1 != nil {

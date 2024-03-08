@@ -54,9 +54,6 @@ func New{{$m.Name}}Client(c xrpc.IRPCClient) *{{$m.Name}}Client {
     return &{{$m.Name}}Client{c: c}
 }
 
-func (c *{{$m.Name}}Client) Close() {
-	c.c.Close()
-}
 {{range $_, $method := $m.Methods}}
 func (c *{{$m.Name}}Client) {{$method.Name}}(subj string
 	{{- range $index, $arg := $method.Args -}}
@@ -90,7 +87,7 @@ func (c *{{$m.Name}}Client) {{$method.Name}}(subj string
     return err
 	{{- end}}
 }
-{{- end -}}
+{{end}}
 {{- end -}}
 `
 
