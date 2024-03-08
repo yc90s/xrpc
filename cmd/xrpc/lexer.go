@@ -83,6 +83,14 @@ func (l *Lexer) id() *Token {
 		l.advance()
 	}
 
+	// support []
+	if l.current_char == '[' {
+		value += string(l.current_char)
+		l.advance()
+		value += string(l.current_char)
+		l.advance()
+	}
+
 	for l.current_char != None && (isalnum(l.current_char) || l.current_char == '_' || l.current_char == '.') {
 		value += string(l.current_char)
 		l.advance()

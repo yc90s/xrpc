@@ -34,7 +34,7 @@ func (s *ServiceAST) String() string {
 }
 
 func (m *MethodAST) String() string {
-	return fmt.Sprintf("MethodAST(name=%s, args=%v, returns=%v, isgo=)", m.Name, m.Args, m.Returns, m.IsGo)
+	return fmt.Sprintf("MethodAST(name=%s, args=%v, returns=%v, isgo=%v)", m.Name, m.Args, m.Returns, m.IsGo)
 }
 
 // Grammar rule:
@@ -48,7 +48,7 @@ func (m *MethodAST) String() string {
 //               | empty
 // parameter: ID
 // PATH: ".+"
-// ID: (*)?[a-zA-Z_][a-zA-Z0-9_]*
+// ID: (*)?([])?[a-zA-Z_][a-zA-Z0-9_]*
 // returnValue: empty | LPAREN parameter COMMA parameter RPAREN
 
 type Parser struct {

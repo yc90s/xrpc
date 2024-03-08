@@ -7,11 +7,13 @@ import (
 
 func TestCodec(t *testing.T) {
 	temp_data := "world"
+	data1 := []byte("hello")
 	testData := []interface{}{
 		"hello",
 		123,
 		temp_data,
 		&temp_data,
+		data1,
 	}
 	codec := NewCodec()
 
