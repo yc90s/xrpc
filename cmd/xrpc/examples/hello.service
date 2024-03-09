@@ -2,7 +2,8 @@ package main
 
 service HelloService {
     go Hello(string) (string, error)
-    Add(*string, int) (*string, error)
+    Add(*string, []byte) (*string, error)
+    Print(*string, []byte) ([]byte, error)
 }
 
 service WorldService {

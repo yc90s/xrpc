@@ -10,6 +10,7 @@ type IHelloService interface {
     Add(int, *int) (int, error)
     Ping()
     Bye(string)
+    Print([]byte) ([]byte, error)
 }
 
 func RegisterHelloServiceServer(rpc *xrpc.RPCServer, s IHelloService) {
@@ -18,6 +19,7 @@ func RegisterHelloServiceServer(rpc *xrpc.RPCServer, s IHelloService) {
 	rpc.RegisterGO("Add", s.Add)
 	rpc.Register("Ping", s.Ping)
 	rpc.Register("Bye", s.Bye)
+	rpc.RegisterGO("Print", s.Print)
 }
 
 type HelloServiceClient struct {
@@ -55,4 +57,10 @@ func (c *HelloServiceClient) Ping(subj string) error {
 func (c *HelloServiceClient) Bye(subj string, arg0 string) error {
     err := c.c.Cast(subj, "Bye", arg0)
     return err
+}
+
+func (c *HelloServiceClient) Print(subj string, arg0 []byte) ([]byte, error) {
+    var reply []byte
+    err := c.c.Call(subj, "Print", &reply, arg0)
+    return reply, err
 }

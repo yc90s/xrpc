@@ -6,12 +6,14 @@ import "github.com/yc90s/xrpc"
 
 type IHelloService interface {
     Hello(string) (string, error)
-    Add(*string, int) (*string, error)
+    Add(*string, []byte) (*string, error)
+    Print(*string, []byte) ([]byte, error)
 }
 
 func RegisterHelloServiceServer(rpc *xrpc.RPCServer, s IHelloService) {
 	rpc.RegisterGO("Hello", s.Hello)
 	rpc.Register("Add", s.Add)
+	rpc.Register("Print", s.Print)
 }
 
 type HelloServiceClient struct {
@@ -29,10 +31,16 @@ func (c *HelloServiceClient) Hello(subj string, arg0 string) (string, error) {
     return reply, err
 }
 
-func (c *HelloServiceClient) Add(subj string, arg0 *string, arg1 int) (*string, error) {
+func (c *HelloServiceClient) Add(subj string, arg0 *string, arg1 []byte) (*string, error) {
     var reply string
     err := c.c.Call(subj, "Add", &reply, arg0, arg1)
     return &reply, err
+}
+
+func (c *HelloServiceClient) Print(subj string, arg0 *string, arg1 []byte) ([]byte, error) {
+    var reply []byte
+    err := c.c.Call(subj, "Print", &reply, arg0, arg1)
+    return reply, err
 }
 
 type IWorldService interface {

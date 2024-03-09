@@ -48,6 +48,11 @@ func (s *HelloRPCService) Bye(arg string) {
 	glog.Info("bye:" + arg)
 }
 
+func (s *HelloRPCService) Print(data []byte) ([]byte, error) {
+	result := []byte("print:" + string(data))
+	return result, nil
+}
+
 func newHelloRPCServiceClient(c xrpc.IRPCClient) *HelloServiceClient {
 	return NewHelloServiceClient(c)
 }
@@ -110,5 +115,13 @@ func main() {
 		glog.Info(err5)
 	} else {
 		glog.Info(sum)
+	}
+
+	data := []byte("hello")
+	reply6, err6 := c.Print("hello_server", data)
+	if err6 != nil {
+		glog.Info(err6)
+	} else {
+		glog.Info(string(reply6))
 	}
 }

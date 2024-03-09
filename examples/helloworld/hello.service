@@ -6,4 +6,5 @@ service HelloService {
     go Add(int, *int) (int, error)
     Ping()
     Bye(string)
+    go Print([]byte) ([]byte, error)
 }
